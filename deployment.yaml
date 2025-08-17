@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omed-deployment
+  labels:
+    app: oeme
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omed
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: omed
+    spec:
+      containers:
+        - name: omed
+          image: 127.0.0.1:5000/omed-app:latest
+          ports:
+            - containerPort: 8009
+          imagePullPolicy: Always
+#      imagePullSecrets:
+#        - name: regsecret
+      nodeSelector:
+        client: sandboxsacco
